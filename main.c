@@ -30,6 +30,7 @@ int main() {
     random = rand() % 2;
 
     t = clock();
+    printf("t = %li\n", t);
     for (long i = TEST_OPS+random; i <= TEST_OPS+random; i++) {
         for (long j = 1; j < i; j++) {
             if (i % j == 0) { //if modding it gives you a 0, diviser
@@ -42,7 +43,8 @@ int main() {
         sum = 0;
     }
     t = clock() - t;
-
+    printf("t = %li\n", t);
+    
     seconds = 1.0 /((double)t/(double)CLOCKS_PER_SEC);
     ops = 15 * seconds * (TEST_OPS+random);
 
