@@ -31,11 +31,12 @@ int main() {
 
     random = rand() % 2;
     t = clock();
-    printf("t = %li\n", t);
+    printf("t = %li\n", clock());
     for (int i = 0; i < 10; i++) {
-        random += rand() % 5;
+        if(rand() % 5 == 0)
+            random += 1;
         t = clock();
-        printf("t = %li\n", t);
+
     }
     t = clock() - t;
 
