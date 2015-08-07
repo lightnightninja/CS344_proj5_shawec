@@ -37,6 +37,7 @@ int main() {
             random += 1;
         t = clock();
 
+        printf("t = %li\n", t);
     }
     t = clock() - t;
 
@@ -100,8 +101,8 @@ int main() {
 
         t = clock() - t;
         seconds = (double)t/(double)CLOCKS_PER_SEC;
-        printf("Time taken for %lu operations: %lf\n", ops, seconds);
-        printf("Numbers range checked: %li - %li, doing %.2li million operations per second.\n", start, end, (long)(ops/seconds + 0.5)/1000000);
+        printf("Time taken for %lu operations: %.2lf\n", ops, seconds);
+        printf("Numbers range checked: %li - %li, doing %li million operations per second.\n", start, end, (long)(ops/seconds + 0.5)/1000000);
 
 
 
