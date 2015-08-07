@@ -27,13 +27,17 @@ int main() {
     long counter; //used for counting the ops in
     double seconds;
 
+
+
     random = rand() % 2;
     t = clock();
+    printf("t = %li\n", t);
     for (int i = 0; i < 10; i++) {
         random += rand() % 5;
     }
-    t = clock() -t;
+    t = clock() - t;
 
+    printf("t = %li\n", t);
 
     t = clock();
     printf("t = %li\n", t);
