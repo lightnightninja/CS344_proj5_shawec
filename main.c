@@ -34,12 +34,15 @@ int main() {
     printf("t = %li\n", t);
     for (int i = 0; i < 10; i++) {
         random += rand() % 5;
+        t = clock();
+        printf("t = %li\n", t);
     }
     t = clock() - t;
 
     printf("t = %li\n", t);
 
     t = clock();
+    random = rand() % 2;
     printf("t = %li\n", t);
     for (long i = TEST_OPS+random; i <= TEST_OPS+random; i++) {
         for (long j = 1; j < i; j++) {
