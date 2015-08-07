@@ -27,9 +27,10 @@ int main() {
     long counter; //used for counting the ops in
     double seconds;
 
+    random = rand() % 2;
 
     t = clock();
-    for (long i = TEST_OPS; i <= TEST_OPS; i++) {
+    for (long i = TEST_OPS+random; i <= TEST_OPS+random; i++) {
         for (long j = 1; j < i; j++) {
             if (i % j == 0) { //if modding it gives you a 0, diviser
                 temp += j;
@@ -43,7 +44,7 @@ int main() {
     t = clock() - t;
 
     seconds = 1.0 /((double)t/(double)CLOCKS_PER_SEC);
-    ops = 15 * seconds * TEST_OPS;
+    ops = 15 * seconds * (TEST_OPS+random);
 
     printf("Time taken for %i operations: %lf\nIt would take %lu ops for 15 seconds of work.\n", TEST_OPS, (double)t/(double)CLOCKS_PER_SEC, ops);
 
