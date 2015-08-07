@@ -86,7 +86,6 @@ int main() {
     for (int i = 0; i < 5; i++) {
 
         counter = 0;
-        ops = (long)((ops/seconds) * 15);
         random = rand() % TEST_OPS;
         start = random;
         end = start;
@@ -120,6 +119,9 @@ int main() {
         seconds = (double)t/(double)CLOCKS_PER_SEC;
         printf("Time taken for %lu operations: %lf\n", ops, seconds);
         printf("Numbers range checked: %li - %li, doing %li million operations per second.\n", start, end, (long)(ops/seconds + 0.5)/1000000);
+
+        ops = (long)((ops/seconds) * 15);//setting up for next loop accounting for changes
+
 
     }
 
