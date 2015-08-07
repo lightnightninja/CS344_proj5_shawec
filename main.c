@@ -36,7 +36,6 @@ int main() {
             temp = 1;
 
             printf("I'm in here for some reason\n");
-        }
     }
     t = clock() - t;
 
