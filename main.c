@@ -34,8 +34,8 @@ int main() {
         temp = TEST_OPS % i;
         if (temp == 100) {
             temp = 1;
-
             printf("I'm in here for some reason\n");
+        }
     }
     t = clock() - t;
 
