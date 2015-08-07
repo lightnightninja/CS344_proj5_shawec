@@ -28,6 +28,12 @@ int main() {
     double seconds;
 
     random = rand() % 2;
+    t = clock();
+    for (int i = 0; i < 10; i++) {
+        random = rand() % 5;
+    }
+    t = clock() -t;
+
 
     t = clock();
     printf("t = %li\n", t);
@@ -44,7 +50,7 @@ int main() {
     }
     t = clock() - t;
     printf("t = %li\n", t);
-    
+
     seconds = 1.0 /((double)t/(double)CLOCKS_PER_SEC);
     ops = 15 * seconds * (TEST_OPS+random);
 
