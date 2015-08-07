@@ -30,7 +30,7 @@ int main() {
     random = rand() % 2;
     t = clock();
     for (int i = 0; i < 10; i++) {
-        random = rand() % 5;
+        random += rand() % 5;
     }
     t = clock() -t;
 
@@ -54,7 +54,7 @@ int main() {
     seconds = 1.0 /((double)t/(double)CLOCKS_PER_SEC);
     ops = 15 * seconds * (TEST_OPS+random);
 
-    printf("Time taken for %i operations: %lf\nIt would take %lu ops for 15 seconds of work.\n", TEST_OPS, (double)t/(double)CLOCKS_PER_SEC, ops);
+    printf("Time taken for %i operations: %.4lf seconds\nIt would take %lu ops for 15 seconds of work.\n", TEST_OPS, (double)t/(double)CLOCKS_PER_SEC, ops);
 
 
     for (int i = 0; i < 5; i++) {
@@ -93,7 +93,7 @@ int main() {
         t = clock() - t;
         seconds = (double)t/(double)CLOCKS_PER_SEC;
         printf("Time taken for %lu operations: %lf\n", ops, seconds);
-        printf("Numbers range checked: %li - %li, doing %li million operations per second.\n", start, end, (long)(ops/seconds + 0.5)/1000000);
+        printf("Numbers range checked: %li - %li, doing %.2li million operations per second.\n", start, end, (long)(ops/seconds + 0.5)/1000000);
 
 
 
@@ -101,39 +101,3 @@ int main() {
     }
 
 }
-
-//    //random number used to reduce compiler optimization,
-//    random = rand() % TEST_OPS;
-//    start = random;
-//    end = start;
-//    temp = end;
-//    //get random up to the sameish number as ops, aka find out how much work to dish
-//    for (long i = random; ((i >> 1) + temp) < ops; i++, ++counter) {
-//        //this bit shift is supposed to check for rounding, always less
-//        temp += i;
-//    }
-//    ops = temp; //setting it so we have the correct number of ops we should be doing
-//    end += counter;
-//
-//    printf("start = %li\nend = %li\n", start, end);
-//    //start timing how long it takes
-//    t = clock();
-//
-//    for (long i = start; i < end; i++) {
-//        for (long j = 1; j < i; j++) {
-//            if (i % j == 0) { //if modding it gives you a 0, diviser
-//                sum += j;
-//            }
-//        }
-//        if (sum == i) {
-//            printf("%li, is a perfect number.\n", i);
-//        }
-//        sum = 0;
-//    }
-//
-//    t = clock() - t;
-//    seconds = (double)t/(double)CLOCKS_PER_SEC;
-//    printf("Time taken for %lu operations: %lf\n", ops, seconds);
-//    printf("Numbers range checked: %li - %li, doing %li million operations per second.\n", start, end, (long)(ops/seconds + 0.5)/1000000);
-
-/////////////////////////// this is "round two"
