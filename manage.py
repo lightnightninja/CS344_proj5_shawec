@@ -13,8 +13,6 @@ import sys
 import threading
 
 
-def JSONformater(type, toFormat, ):
-	
 class Server:
 	def __init__(self):
 		self.host = 'localhost'
@@ -24,7 +22,7 @@ class Server:
 		self.server = None
 		self.threads = []
 		
-
+		
 	def open_socket(self):
 		try:
 			self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,7 +31,6 @@ class Server:
 		except socket.error, (value,message):
 			if self.server:
 				self.server.close()
-			print "Could not open socket: " + message
 			sys.exit(1)
 
 # Handles everything going on
@@ -58,14 +55,12 @@ class Server:
 						running = 0 
 		except KeyboardInterrupt:
 			print "exiting now."
-		 
-				
-					
+
 		# close all threads
 		self.server.close()
 		for c in self.threads:
 			c.join()
-		
+
 
 class Client(threading.Thread):
 	def __init__(self, (address, port)):
@@ -73,7 +68,7 @@ class Client(threading.Thread):
 		self.address = address
 		self.port = port
 		self.size = 1024
-        print "[+] New thread started for "+ip+":"+str(port)
+		print "[+] New thread started for "+address+":"+str(port)
 
 	def run(self):
 		running = 1
@@ -87,10 +82,9 @@ class Client(threading.Thread):
 					self.client.close()
 					running = 0
 					print "client closed."
-			
 
-if __name__ == "__main__":
+#
+if __name__ == __main__:
 	s = Server()
 	s.run()
-
 

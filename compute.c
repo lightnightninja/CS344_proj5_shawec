@@ -29,51 +29,63 @@
 typedef struct sockaddr_in sockaddr_in; //being a bit lazy here, although it's really not needed
 
 
+char* concat(char *s1, char *s2)
+{
+    char *result = (char *)malloc(strlen(s1)+strlen(s2)+1);//+1 for NULL
+    strncpy(result, s1, strlen(s1));
+    strcat(result, s2);
+    return result;
+}
+
+int* compute(int start, int end, int nums[10]){
+
+	return 1;
+	
+}
 
 int main(){
 
     /* Stuff for compute */
     srand((unsigned int)time(NULL));
-    time_t  s, e; //used for timing
+    time_t  s, e;				//used for timing
     long    start   = 0;
-    long    end     = 1; //used to hold the end variable (this will be passed eventually)
-    long    sum     = 0; //holds perfect numbers
-    long    temp; //just holds stuff
-    long    ops; //operations (total)
-    long    random; //holds rand value
-    long    counter; //used for counting the ops in
-    long    millops; //simply for formatting
+    long    end     = 1;		//used to hold the end variable (this will be passed eventually)
+    long    sum     = 0;		//holds perfect numbers
+    long    temp;				//just holds stuff
+    long    ops;				//operations (total)
+    long    random;				//holds rand value
+    long    counter;			//used for counting the ops in
+    long    millops;			//simply for formatting
     double  seconds;
-    char   *perfnums; //just used for storing the nums as string
-    int     pnums[10];      //this is used for
+    int     len;
+    int     numsFound;			//holds the numbers found for pos in array
+    int     pnums[10];          //this is used for
+    char   *perfnums;           //just used for storing the nums as string
+    char   *perfTemp;           //used to free the old string
 
     /* Stuff for sockets */
     sockaddr_in serverAddr;
     socklen_t   addr_size;
 
-    int     clientFd; //holds fd for the client
-    char    JSONstr[MAXLINE]; // used for formating
-    char    sendl  [MAXLINE]; // takes in data
-    char    recvl  [MAXLINE];
-    int     quit        = 0;
-    int     try_count   = 0;
+    int     clientFd;           //holds fd for the client
+    char   *JSONstr;            // used for formating
+    char    sendl[MAXLINE];     // takes in data
+    char    recvl[MAXLINE];
+    int     quit       = 0;
+    int     try_count  = 0;
 
 
-
+    /*Create the socket.*/
     do {
-        /*---- Create the socket. The three arguments are: ----*/
-        /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
+        /* Uses: IP, Stream socket, and TCP to open socketFd*/
         clientFd = socket(PF_INET, SOCK_STREAM, 0);
 
-        /*---- Configure settings of the server address struct ----*/
-        /* Address family = Internet */
-        serverAddr.sin_family = AF_INET;
-        /* Set port number, using htons function to use proper byte order */
-        serverAddr.sin_port = htons(SERV_PORT);
-        /* Set IP address to localhost */
-        serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-        /* Set all bits of the padding field to 0 */
-        memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
+        /* Configure settings of the server address struct */
+
+        serverAddr.sin_family = AF_INET; /* Address family = Internet */
+        serverAddr.sin_port = htons(SERV_PORT); /* Set port number */
+        serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); /* Set IP address to localhost */
+        memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero); /* Set all bits of the padding field to 0 */
 
         /*---- Connect the socket to the server using the address struct ----*/
         addr_size = sizeof serverAddr;
@@ -94,8 +106,33 @@ int main(){
 
     } while (try_count < 3);
 
-
+	ops = 1250000000; //this is just a start number to give it something to do at first 
     while (quit != 1){
+
+		/*******************DEBUG*****************/
+		counter = 0;
+		random = rand() % 100000000;
+		start = random;
+		end = start;
+		temp = end;
+
+		//get random up to the sameish number as ops, aka find out how much work to dish
+		for (long i = random; ((i >> 1) + temp) < ops; i++, ++counter) {
+			//this bit shift is supposed to check for rounding, always less
+			temp += i;
+		}
+		ops = temp;
+		end += counter;
+
+		//get random up to the sameish number as ops, aka find out how much work to dish
+		for (long i = random; ((i >> 1) + temp) < ops; i++, ++counter) {
+			//this bit shift is supposed to check for rounding, always less
+			temp += i;
+		}
+		ops = temp;
+		end += counter;
+
+		/******************************************/
 
         read(clientFd, recvl, MAXLINE);
 
@@ -124,17 +161,20 @@ int main(){
 
         e = clock();
         seconds = ((double)s-(double)e)/(double)CLOCKS_PER_SEC;
+        millops = (long)(ops/seconds + 0.5)/1000000;
         printf("Ops completed   : %lu\n"
                "Time Taken      : %.2lf\n"
                "Range checked   : %li - %li\n"
                "Million ops/sec : %li.\n",
-               ops, seconds, start, end, (long)(ops/seconds + 0.5)/1000000);//DEBUG
+               ops, seconds, start, end, millops);//DEBUG
 
         ops = (long)((ops/seconds) * 15);//setting up for next loop accounting for changes
 
         //JSONformat();
-        snprintf(NULL, MAXLINE, <#const char *restrict, ...#>)
-        snprintf(sendl, "{\"compute\":{ops:%lu,time:%lf,found:{%s}", ops, seconds, perfnums);
+        //for (int i = 0; i < 10; i++) {}
+
+        len = snprintf(NULL, MAXLINE, "{\"compute\":{ops:%lu,time:%lf,found:{%s}", ops, seconds, perfnums);
+        snprintf(sendl, len, "{\"compute\":{ops:%lu,time:%lf,found:{%s}", ops, seconds, perfnums);
         write(clientFd, sendl, strlen(sendl) + 1);
         printf("Server sent: %s\n",recvl);
         
