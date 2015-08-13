@@ -73,7 +73,7 @@ int main(){
     char    recvl[MAXLINE];
     int     quit       = 0;
     int     try_count  = 0;
-
+	int		die		   = 0;
 
     /*Create the socket.*/
     do {
@@ -140,6 +140,10 @@ int main(){
 
 		printf("Server sent: %s\n", recvl);
 
+		if (strncmp(recvl, "{\"die\"}", 9) == 0) {
+			fprintf(stdout, "Was told to die, might want to check output");
+			exit(0);
+		}
 
         //JSONparse();
         //compute();
@@ -173,10 +177,14 @@ int main(){
 		snprintf(charnums, 5, "0000");
 		//printf("len = %lu\n", len);
         snprintf(sendl, MAXLINE, "{\"client\":\"compute\",{\"ops\":%lu,\"time\":%lf,\"found\":{%s}}}", ops, seconds, charnums);
+
+		memset(&sendl, '\0', MAXLINE);
 		if(write(clientFd, sendl, strlen(sendl) + 1) == -1){ //
 			perror("Something broke...");
 			exit(EXIT_FAILURE);
 		}
+	
+
         
     }
     /*---- Read the message from the server into the buffer ----*/
