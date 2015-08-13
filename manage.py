@@ -188,7 +188,7 @@ class Client(threading.Thread):
 			stuff += '}}'
 			self.client.send(bytes((stuff), 'ASCII'))
 			kill = self.client.recv(self.size.decode()
-			if kill == '\"quit\"':
+			if kill == "\"quit\"":
 				quit = True
 				
 				
