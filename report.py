@@ -14,7 +14,7 @@ port = 4936
 size = 1024
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host,port))
-s.send(bytes("\"report\"", 'ascii'))
+s.send(bytes("\"report\"", 'ASCII'))
 
 x = s.recv(size) #should be conecction message
 
@@ -34,8 +34,9 @@ print(json)
 if len(sys.argv) < 2:
 	s.send(bytes("\"alive\"", 'ascii')
 	
-elif sys.argv[1]:
-	s.send(bytes("\"quit\"", 'ascii')
-	print("everyone must die!")
+else:
+	if sys.argv[1]:
+		s.send(bytes("\"quit\"", 'ascii')
+		print("everyone must die!")
 	
 s.close()

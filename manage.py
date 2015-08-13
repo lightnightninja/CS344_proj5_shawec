@@ -112,7 +112,7 @@ class Server:
 		try:
 			for c in self.threads:
 				if c.is_alive():
-					c.client. send(bytes(("\"die\""), 'ascii'))
+					c.client. send(bytes(("\"die\""), 'ASCII'))
 				c.running = 0
 				if c.is_alive():
 					c.join()
@@ -142,7 +142,7 @@ class Client(threading.Thread):
 	def run(self):
 		global maxNum
 		msg = 'Connected!'
-		self.client.send(bytes((msg), 'ascii'))
+		self.client.send(bytes((msg), 'ASCII'))
 		typ = self.client.recv(self.size).decode() #asks for the client type
 		self.type = re.sub(r'[:{}"]+', r'', typ)
 		print ("[+] New instance of " + self.type + ", PID: " + str(self.pid))
@@ -152,9 +152,8 @@ class Client(threading.Thread):
 				start, end = getRange(self.ops)
 				args = '{' + '\"start\":' + str(start) + ',' + '\"end\":' + str(end) + '}'
 				print (args)
-				self.client.send(bytes((args), 'ascii'))
-				d = self.client.recv(self.size)
-				data = d.decode('ascii')
+				self.client.send(bytes((args), 'ASCII'))
+				data = self.client.recv(self.size).decode()
 				if data:
 					dat = data.strip('\0')
 					self.ops = int(dat)
@@ -187,9 +186,8 @@ class Client(threading.Thread):
 					stuff += '\"' + str(thing.pid) + '\":{\"ops\":' + str(opssec) + ',\"time\":' + str(self.avgtime) + ',\"procd\":' + str(self.calced) + '}'
 					
 			stuff += '}}'
-			self.client.send(bytes((stuff), 'ascii'))
-			k = self.client.recv(self.size)
-			kill = k.decode('ascii')
+			self.client.send(bytes((stuff), 'ASCII'))
+			kill = self.client.recv(self.size.decode()
 			if kill == '\"quit\"':
 				quit = True
 				
