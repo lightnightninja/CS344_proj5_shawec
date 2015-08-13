@@ -1,17 +1,20 @@
 #!/usr/bin/env python
 
-"""
-Name : Cierra Shawe
-Date : Tue Aug 11
-Proj : Assignment 5
-Class: CS344
-"""
+#####################################
+#  Name : Cierra Shawe				#
+#  Date : Tue Aug 11				#
+#  Proj : Assignment 5				#
+#  Class: CS344						#
+#####################################
 
 import select
 import socket
 import sys
 import threading
 
+
+def JSONformater(type, toFormat, ):
+	
 class Server:
 	def __init__(self):
 		self.host = 'localhost'
@@ -33,14 +36,14 @@ class Server:
 			print "Could not open socket: " + message
 			sys.exit(1)
 
+# Handles everything going on
 	def run(self):
 		self.open_socket()
-		input = [self.server,sys.stdin]
+		input = [self.server, sys.stdin]
 		running = 1
-		while running:
-			inputready,outputready,exceptready = select.select(input,[],[])
-
-			try:
+		try:
+			while running:	
+				inputready,outputready,exceptready = select.select(input,[],[])
 				for s in inputready:
 					if s == self.server:
 						# handle the server socket
@@ -53,25 +56,26 @@ class Server:
 						junk = sys.stdin.readline()
 						print junk
 						running = 0 
-			except KeyboardInterrupt:
-				print "exiting now."
-				break; 
+		except KeyboardInterrupt:
+			print "exiting now."
+		 
 				
 					
 		# close all threads
 		self.server.close()
 		for c in self.threads:
 			c.join()
+		
 
 class Client(threading.Thread):
-	def __init__(self, (client, address)):
+	def __init__(self, (address, port)):
 		threading.Thread.__init__(self)
-		self.client = client
 		self.address = address
+		self.port = port
 		self.size = 1024
+        print "[+] New thread started for "+ip+":"+str(port)
 
 	def run(self):
-		print "New client"
 		running = 1
 		while running:
 			data = self.client.recv(self.size)
@@ -83,9 +87,7 @@ class Client(threading.Thread):
 					self.client.close()
 					running = 0
 					print "client closed."
-			except KeyboardInterrupt:
-				print "exiting now."
-				running = 0;
+			
 
 if __name__ == "__main__":
 	s = Server()
