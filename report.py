@@ -24,8 +24,6 @@ JSON = s.recv(size).decode() #this should be the string
 pattern = re.compile(r'\"([a-z]+|[0-9]+)\":([0-9]+)')
 json = dict([(i.group(1),i.group(2)) for i in pattern.finditer(JSON)])
 
-
-
 print(json)
 #Jlist = {}
 #s = JSON
