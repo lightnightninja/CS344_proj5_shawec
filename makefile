@@ -1,10 +1,10 @@
 CC = gcc
 CXX = icpc
 CFLAGS = -std=c99 -g
-TARGET = perf
+TARGET = prog
 SOURCE = main.c
 
-default: compile client run
+default: compile client
 
 compile: ${SOURCE} ${INCLUDES}
 	${CC} ${CFLAGS} ${SOURCE} -o ${TARGET} ${LDFLAGS}
@@ -12,6 +12,8 @@ compile: ${SOURCE} ${INCLUDES}
 client: client.c
 	${CC} ${CFLAGS} client.c -o client ${LDFLAGS}
 
-run:
-	python echo-server.py
-    
+manage:
+    python manage.py
+
+report:
+    python report.py
