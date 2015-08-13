@@ -36,7 +36,7 @@ if len(sys.argv) < 2:
 	
 else:
 	if sys.argv[1]:
-		s.send(bytes("\"quit\"", 'ascii')
+		s.send(bytes("\"quit\"", 'ascii'))
 		print("everyone must die!")
 	
 s.close()
