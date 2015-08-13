@@ -32,7 +32,7 @@ print(json)
 #print Jlist
 
 if len(sys.argv) < 2:
-	s.send(bytes("\"alive\"", 'ascii')
+	s.send(bytes("\"alive\"", 'ascii'))
 	
 else:
 	if sys.argv[1]:
