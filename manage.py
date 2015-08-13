@@ -74,17 +74,17 @@ class Client(threading.Thread):
 		running = 1
 		while running:
 			data = self.client.recv(self.size)
-			try:
-				if data:
-					self.client.send(data)
-					print data
-				else:
-					self.client.close()
-					running = 0
-					print "client closed."
+			
+			if data:
+				self.client.send(data)
+				print data
+			else:
+				self.client.close()
+				running = 0
+				print "client closed."
 
 
-if __name__ == __main__:
+if __name__ == "__main__":
 	s = Server()
 	s.run()
 
