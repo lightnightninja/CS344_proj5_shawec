@@ -141,7 +141,7 @@ class Client(threading.Thread):
 		
 	def run(self):
 		global maxNum
-		self.client.send(bytes('Connected!', 'ascii'))
+		self.client.send(bytes(('Connected!'), 'ascii'))
 		typ = self.client.recv(self.size).decode() #asks for the client type
 		self.type = re.sub(r'[:{}"]+', r'', typ)
 		print ("[+] New instance of " + self.type + ", PID: " + str(self.pid))
