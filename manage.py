@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 #####################################
-#  Name : Cierra Shawe				#
-#  Date : Tue Aug 11				#
-#  Proj : Assignment 5				#
-#  Class: CS344						#
+#  Name : Cierra Shawe				
+#  Date : Tue Aug 11				
+#  Proj : Assignment 5				
+#  Class: CS344						
 #####################################
 
 import select
@@ -33,7 +33,7 @@ class Server:
 				self.server.close()
 			sys.exit(1)
 
-# Handles everything going on
+	# Handles everything going on
 	def run(self):
 		self.open_socket()
 		input = [self.server, sys.stdin]
@@ -83,7 +83,7 @@ class Client(threading.Thread):
 					running = 0
 					print "client closed."
 
-#
+
 if __name__ == __main__:
 	s = Server()
 	s.run()
