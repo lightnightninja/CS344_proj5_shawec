@@ -1,10 +1,10 @@
 CC = gcc
 CXX = icpc
 CFLAGS = -std=c99 -g
-TARGET = prog
-SOURCE = main.c
+TARGET = compute
+SOURCE = compute.c
 
-default: compile client
+default: compile
 
 compile: ${SOURCE} ${INCLUDES}
 	${CC} ${CFLAGS} ${SOURCE} -o ${TARGET} ${LDFLAGS}
@@ -13,7 +13,7 @@ client: client.c
 	${CC} ${CFLAGS} client.c -o client ${LDFLAGS}
 
 manage:
-    python manage.py
+	python manage.py
 
 report:
-    python report.py
+	python report.py

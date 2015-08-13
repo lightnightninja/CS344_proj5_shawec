@@ -37,12 +37,6 @@ char* concat(char *s1, char *s2)
     return result;
 }
 
-int* compute(int start, int end, int nums[10]){
-
-	return 1;
-	
-}
-
 int main(){
 
     /* Stuff for compute */
@@ -51,29 +45,25 @@ int main(){
     long    start   = 0;
     long    end     = 1;		//used to hold the end variable (this will be passed eventually)
     long    sum     = 0;		//holds perfect numbers
-    long    temp;				//just holds stuff
     long    ops;				//operations (total)
-    long    random;				//holds rand value
-    long    counter;			//used for counting the ops in
     long    millops;			//simply for formatting
     double  seconds;
-    int     len;
     int     numsFound;			//holds the numbers found for pos in array
     int     pnums[10];          //this is used for
-	char	charnums[100];     //just used for storing the nums as string
-    char   *perfTemp;           //used to free the old string
+	char	charnums[25];     //just used for storing the nums as string
+	char	startComp[] = "start";
+	char	endComp[] = "end";
 
     /* Stuff for sockets */
     sockaddr_in serverAddr;
     socklen_t   addr_size;
 
     int     clientFd;           //holds fd for the client
-    char   *JSONstr;            // used for formating
     char    sendl[MAXLINE];     // takes in data
     char    recvl[MAXLINE];
     int     quit       = 0;
     int     try_count  = 0;
-	int		die		   = 0;
+	char	clienttype[] = {"\"compute\""};
 
     /*Create the socket.*/
     do {
@@ -105,7 +95,16 @@ int main(){
             break;
 
     } while (try_count < 3);
-	char clienttype[] = {"{\"compute\"}"};
+
+	memset(&recvl, '\0', MAXLINE);
+
+	if(read(clientFd, recvl, MAXLINE) == -1){ //
+		perror("Something broke...");
+		exit(EXIT_FAILURE);
+	}
+
+	printf("Server sent: %s\n", recvl);
+
 	if(write(clientFd, clienttype, strlen(clienttype) + 1) == -1){ //
 		perror("Something broke...");
 		exit(EXIT_FAILURE);
@@ -113,23 +112,6 @@ int main(){
 
 	ops = 1250000000; //this is just a start number to give it something to do at first
     while (quit != 1){
-
-		/*******************DEBUG*****************/
-		counter = 0;
-		random = rand() % 100000000;
-		start = random;
-		end = start;
-		temp = end;
-
-		//get random up to the sameish number as ops, aka find out how much work to dish
-		for (long i = random; ((i >> 1) + temp) < ops; i++, ++counter) {
-			//this bit shift is supposed to check for rounding, always less
-			temp += i;
-		}
-		ops = temp;
-		end += counter;
-
-		/******************************************/
 
         memset(&recvl, '\0', MAXLINE);
 
@@ -140,15 +122,53 @@ int main(){
 
 		printf("Server sent: %s\n", recvl);
 
-		if (strncmp(recvl, "{\"die\"}", 9) == 0) {
-			fprintf(stdout, "Was told to die, might want to check output");
-			exit(0);
+		if (strncmp(recvl, "\"die\"", 7) == 0) {
+			fprintf(stdout, "What did I ever do to you :(\n");
+			quit = 1;
+			break;
 		}
 
+		int good = 0;
         //JSONparse();
+		for (int i = 0; i < strlen(recvl) + 1; i++) {
+			if (recvl[i] == 's') {
+				for (int j = 0; j < strlen(startComp); j++) {
+					if (recvl[i+j] == startComp[j]){
+						good += 1;
+					}
+					else
+						good = 0;
+				}
+				if (good > 1) {
+					i += good+2;
+					for (int k = 0; (char)recvl[i] <= '9' && (char)recvl[i] >= '0'; i++, k++) {
+						charnums[k] = recvl[i];
+					}
+					start = atoi(charnums);
+				}
+				i += 2;
+			}
+			memset(&charnums, '\0', 25);
+			if (recvl[i] == 'e'){
+				good = 0;
+				for (int j = 0; j < strlen(endComp); j++) {
+					if (recvl[i+j] == endComp[j])
+						good += 1;
+					else
+						good = 0;
+				}
+				if (good > 1) {
+					i += good+2;
+
+					for (int k = 0; (char)recvl[i] <= '9' && (char)recvl[i] >= '0'; i++, k++) {
+						charnums[k] = recvl[i];
+					}
+					end = atol(charnums);
+				}
+			}
+		}
         //compute();
         s = clock();
-
         for (long i = start; i < end; i++) {
             for (long j = 1; j < i; j++) {
                 if (i % j == 0) { //if modding it gives you a 0, diviser
@@ -160,8 +180,8 @@ int main(){
             }
             sum = 0;
         }
-
         e = clock();
+
         seconds = ((double)e-(double)s)/(double)CLOCKS_PER_SEC;
         millops = (long)(ops/seconds + 0.5)/1000000;
         printf("Ops completed   : %lu\n"
@@ -172,26 +192,18 @@ int main(){
 
         ops = (long)((ops/seconds) * 15);//setting up for next loop accounting for changes
 
-        //JSONformat();
-        //for (int i = 0; i < 10; i++) {}
-		snprintf(charnums, 5, "0000");
-		//printf("len = %lu\n", len);
-        snprintf(sendl, MAXLINE, "{\"client\":\"compute\",{\"ops\":%lu,\"time\":%lf,\"found\":{%s}}}", ops, seconds, charnums);
-
 		memset(&sendl, '\0', MAXLINE);
+		//snprintf(charnums, 2, "0");
+		//printf("len = %lu\n", len);
+		snprintf(sendl, 25, "%lu", ops);
+        //snprintf(sendl, MAXLINE, "{\"ops\":%lu,\"time\":%lf,\"found\":{%s}}", ops, seconds, charnums);
+		
 		if(write(clientFd, sendl, strlen(sendl) + 1) == -1){ //
 			perror("Something broke...");
 			exit(EXIT_FAILURE);
 		}
-	
 
-        
     }
-    /*---- Read the message from the server into the buffer ----*/
-    //recv(clientFd, buffer, 1024, 0);
-
-    /*---- Print the received message ----*/
-    //printf("Data received: %s", buffer);
     
-    return 0;
+    return EXIT_SUCCESS;
 }
