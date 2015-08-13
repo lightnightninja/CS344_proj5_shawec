@@ -60,7 +60,7 @@ int main(){
     int     len;
     int     numsFound;			//holds the numbers found for pos in array
     int     pnums[10];          //this is used for
-    char   *perfnums;           //just used for storing the nums as string
+	char	charnums[100];     //just used for storing the nums as string
     char   *perfTemp;           //used to free the old string
 
     /* Stuff for sockets */
@@ -105,8 +105,13 @@ int main(){
             break;
 
     } while (try_count < 3);
+	char clienttype[] = {"{\"compute\"}"};
+	if(write(clientFd, clienttype, strlen(clienttype) + 1) == -1){ //
+		perror("Something broke...");
+		exit(EXIT_FAILURE);
+	}
 
-	ops = 1250000000; //this is just a start number to give it something to do at first 
+	ops = 1250000000; //this is just a start number to give it something to do at first
     while (quit != 1){
 
 		/*******************DEBUG*****************/
@@ -124,24 +129,17 @@ int main(){
 		ops = temp;
 		end += counter;
 
-		//get random up to the sameish number as ops, aka find out how much work to dish
-		for (long i = random; ((i >> 1) + temp) < ops; i++, ++counter) {
-			//this bit shift is supposed to check for rounding, always less
-			temp += i;
-		}
-		ops = temp;
-		end += counter;
-
 		/******************************************/
-
-        read(clientFd, recvl, MAXLINE);
 
         memset(&recvl, '\0', MAXLINE);
 
-        if(read(clientFd, recvl, MAXLINE) == 0){
+        if(read(clientFd, recvl, MAXLINE) == -1){ //
             perror("Something broke...");
             exit(EXIT_FAILURE);
         }
+
+		printf("Server sent: %s\n", recvl);
+
 
         //JSONparse();
         //compute();
@@ -160,23 +158,25 @@ int main(){
         }
 
         e = clock();
-        seconds = ((double)s-(double)e)/(double)CLOCKS_PER_SEC;
+        seconds = ((double)e-(double)s)/(double)CLOCKS_PER_SEC;
         millops = (long)(ops/seconds + 0.5)/1000000;
         printf("Ops completed   : %lu\n"
                "Time Taken      : %.2lf\n"
                "Range checked   : %li - %li\n"
-               "Million ops/sec : %li.\n",
+               "Million ops/sec : %li\n",
                ops, seconds, start, end, millops);//DEBUG
 
         ops = (long)((ops/seconds) * 15);//setting up for next loop accounting for changes
 
         //JSONformat();
         //for (int i = 0; i < 10; i++) {}
-
-        len = snprintf(NULL, MAXLINE, "{\"compute\":{ops:%lu,time:%lf,found:{%s}", ops, seconds, perfnums);
-        snprintf(sendl, len, "{\"compute\":{ops:%lu,time:%lf,found:{%s}", ops, seconds, perfnums);
-        write(clientFd, sendl, strlen(sendl) + 1);
-        printf("Server sent: %s\n",recvl);
+		snprintf(charnums, 5, "0000");
+		//printf("len = %lu\n", len);
+        snprintf(sendl, MAXLINE, "{\"client\":\"compute\",{\"ops\":%lu,\"time\":%lf,\"found\":{%s}}}", ops, seconds, charnums);
+		if(write(clientFd, sendl, strlen(sendl) + 1) == -1){ //
+			perror("Something broke...");
+			exit(EXIT_FAILURE);
+		}
         
     }
     /*---- Read the message from the server into the buffer ----*/
