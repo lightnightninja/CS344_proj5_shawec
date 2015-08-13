@@ -127,9 +127,10 @@ class Client(threading.Thread):
 		self.address = ip
 		self.port = port
 		self.size = SIZE
-		self.pid = int(str(os.getpid()) + str(lifeProc))
+		self.pid = int(os.getpid() + lifeProc)
 		self.client = client
 		self.type = 'NULL'
+		
 		self.running = 1
 		self.ops = 1250000000
 		self.seconds = 15
@@ -140,7 +141,7 @@ class Client(threading.Thread):
 		
 	def run(self):
 		global maxNum
-		self.client.send(bytes("Connection opened!", 'ascii')) #let's us see that compute connected
+		self.client.send(bytes('Connection opened!', 'ascii'))
 		typ = self.client.recv(self.size).decode() #asks for the client type
 		self.type = re.sub(r'[:{}"]+', r'', typ)
 		print ("[+] New instance of " + self.type + ", PID: " + str(self.pid))
