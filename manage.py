@@ -98,7 +98,7 @@ class Server:
 						# handle standard input
 						junk = sys.stdin.readline()
 						self.running = 0 
-						
+						sys.stdout.flush() #this way we're not printing extra stuff for
 		except KeyboardInterrupt:
 			print()
 			print ("RAMPAGEEEEEEEEEEEE.")
@@ -118,8 +118,6 @@ class Server:
 					c.join()
 		finally:
 			self.server.close()
-		
-		sys.stdout.flush() #this way we're not printing extra stuff for no reason
 
 class Client(threading.Thread):
 	def __init__(self, ip, port, client):
@@ -134,6 +132,7 @@ class Client(threading.Thread):
 		self.running = 1
 		self.ops = 1250000000
 		self.seconds = 15
+		self.tottime = 0;
 		self.loops = 0
 		self.avgtime = 0
 		self.calced = 0
@@ -160,12 +159,11 @@ class Client(threading.Thread):
 					print (self.ops)
 					seconds = 15
 					self.loops += 1
-					self.seconds += seconds
-					self.avgtime += self.seconds/self.loops
+					self.tottime += seconds
+					self.avgtime += int(self.seconds/self.loops)
 					if end > maxNum:
 						maxNum = end
-					self.calced += end - start
-					#items = JSONparse(data)
+					self.calced += (end - start)
 				else:
 					self.running = 0
 					self.client.close()
@@ -174,18 +172,21 @@ class Client(threading.Thread):
 		elif re.match(r'report', self.type):
 			global activeProc, lifeProc, quit
 			
-			lifeProc 	-= 1 # this is because we don't need it to count itself
-			activeProc 	= len(s.threads)
-			
-			stuff = '{\"active\":' + str(activeProc) + ',\"lifeProc\":' + str(lifeProc) + ',\"calced":' + str(maxNum) + ',\"threads\":{'
+			lifeProc -= 1 # this is because we don't need it to count itself
 			for thing in s.threads:
-				if not s.threads[0]:
-					stuff += ','
-				if thing.is_alive() and thing is not self:
-					opssec = int((thing.ops/thing.seconds + 0.5)/1000000)
-					stuff += '\"' + str(thing.pid) + '\":{\"ops\":' + str(opssec) + ',\"time\":' + str(self.avgtime) + ',\"procd\":' + str(self.calced) + '}'
+				if thing.is_alive():
+					activeProc += 1
+					avgtime += thing.avgtime
 					
-			stuff += '}}'
+			stuff = '{\"active\":' + str(activeProc) + ',\"totalProc\":' + str(lifeProc) + ',\"max\":' + str(maxNum) + ',\"avgtime\":' + str(avgtime)+ ',\"threads\":['
+			for thing in s.threads:
+				if thing.is_alive() and thing is not self:
+					if not s.threads[0]:
+						stuff += ','
+					opssec = int((thing.ops/thing.seconds + 0.5)/1000000)
+					stuff += '\"' + str(thing.pid) + '\":[\"ops\":' + str(opssec) + ',\"time\":' + str(self.avgtime) + ',\"procd\":' + str(self.calced) + ']'
+					
+			stuff += ']}'
 			self.client.send(bytes((stuff), 'ASCII'))
 			kill = self.client.recv(self.size).decode()
 			if kill is '\"quit\"':

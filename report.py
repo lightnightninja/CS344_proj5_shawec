@@ -17,17 +17,35 @@ s.connect((host,port))
 s.send(bytes("\"report\"", 'ASCII'))
 
 x = s.recv(size) #should be conecction message
-
-JSON = s.recv(size).decode() #this should be the string
-
-
-pattern = re.compile(r'\"([a-z]+|[0-9]+)\":([0-9]+)')
-json = dict([(i.group(1),i.group(2)) for i in pattern.finditer(JSON)])
-
+print(x)
+json = s.recv(size).decode() #this should be the string
 print(json)
-#Jlist = {}
+pattern = re.compile(':([0-9]+),')
+active = 0
+lifeProc = 0
+maxChecked =0 
+avgTime= 0
+found = 0
+threads = []
+#thread{PID:{"ops":num, "time":num, "calced":num}
+
+js = re.sub(r'"', r"'", json)
+pattern = re.compile(r'(\'[a-zA-z0-9]+)\'\s*:\s*([0-9])')
+threadpat = re.compile(r'(\"[0-9]+\"\s*:([\[\:\"\,]*[0-9a-zA-Z]+[\:\"\,]+[0-9a-zA-Z]+)*\])')
+j = list(js)
+
+for i in threadpat.finditer(js):
+	j = list(i.group())
+
+#j = dict([(i.group(1),i.group(2))] )
+print (j)
+Jlist = {}
 #s = JSON
-#Jlist = dict(e.split(':') for e in s.split(','))
+Jlist = dict(e.split(':') for e in js.split(','))
+jlist = re.findall(pattern, js)
+jdict = {c:b for a,b,c in my_list}
+#for things in Jlist:
+#	things = re.sub(r'\"|\{', r'', things)
 
 #print Jlist
 

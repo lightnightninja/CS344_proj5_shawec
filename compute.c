@@ -98,6 +98,8 @@ int main(){
 
 	memset(&recvl, '\0', MAXLINE);
 
+	
+
 	if(read(clientFd, recvl, MAXLINE) == -1){ //
 		perror("Something broke...");
 		exit(EXIT_FAILURE);
@@ -197,7 +199,7 @@ int main(){
 		//printf("len = %lu\n", len);
 		snprintf(sendl, 25, "%lu", ops);
         //snprintf(sendl, MAXLINE, "{\"ops\":%lu,\"time\":%lf,\"found\":{%s}}", ops, seconds, charnums);
-		
+
 		if(write(clientFd, sendl, strlen(sendl) + 1) == -1){ //
 			perror("Something broke...");
 			exit(EXIT_FAILURE);

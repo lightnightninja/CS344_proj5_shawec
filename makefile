@@ -17,3 +17,28 @@ manage:
 
 report:
 	python report.py
+
+——————————————————————————————————————————————————
+| Report               	 			 		|
+——————————————————————————————————————————————————
+| Activevprocesses		  : activeProc		 |
+| Lifetime processes		: lifeProc		   |
+| Numbers checked		   : numChecked		 |
+| Max number checked		: maxNum		 	|
+| Perfect Numbers Found	 : numFound		   |
+| Average time taken		: avgTime		    |
+|						 					   |
+——————————————————————————————————————————————————
+| Active Process Stats				 		  |
+——————————————————————————————————————————————————
+|PID	   |calculated   |found  |milops/second  |
+——————————————————————————————————————————————————
+| xxxxxxx  | calc		| found | opsSec	    |
+| xxxxxxx  | calc		| found | opsSec	    |
+| xxxxxxx  | calc		| found | opsSec	    |
+| xxxxxxx  | calc		| found | opsSec	    |
+| xxxxxxx  | calc		| found | opsSec	    |
+| xxxxxxx  | calc		| found | opsSec	    |
+| xxxxxxx  | calc		| found | opsSec	    |
+| xxxxxxx  | calc		| found | opsSec	    |
+——————————————————————————————————————————————————
